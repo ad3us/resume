@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>yasin@xidian:~/resume</title>
+<meta name="description" content="Yasin Dovletov — Computer Science student at Xidian University. Resume.">
+<style>
+:root {
+  --bg:        #080b08;
+  --bg-win:    #0b0f0b;
+  --bg-bar:    #101610;
+  --green:     #3bf07a;
+  --green-dim: #1d8f45;
+  --amber:     #ffb638;
+  --amber-dim: #a8701c;
+  --fg:        #bfe8c8;
+  --fg-mute:   #6f8f78;
+  --rule:      #1e3a25;
+  --glow:      0 0 6px rgba(59, 240, 122, 0.30);
+  --mono: ui-monospace, "SF Mono", "JetBrains Mono", "Fira Code",
+          "Cascadia Code", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { background: var(--bg); -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  padding: clamp(0.5rem, 2.5vw, 2.25rem) clamp(0.4rem, 2vw, 1.5rem);
+  background: radial-gradient(ellipse 120% 80% at 50% 0%, #0d140d 0%, var(--bg) 70%);
+  color: var(--fg);
+  font-family: var(--mono);
+  font-size: clamp(12.5px, 0.55rem + 0.8vw, 15.5px);
+  line-height: 1.65;
+  text-shadow: var(--glow);
+  overflow-x: hidden;
+}
+
+/* CRT overlay: scanlines + vignette */
+body::before, body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9;
+}
+body::before {
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0px,
+    rgba(0, 0, 0, 0) 2px,
+    rgba(0, 0, 0, 0.22) 3px,
+    rgba(0, 0, 0, 0.22) 4px
+  );
+  opacity: 0.55;
+}
+body::after {
+  background:
+    radial-gradient(ellipse 100% 100% at 50% 50%,
+      rgba(0,0,0,0) 55%, rgba(0,0,0,0.45) 100%);
+}
+
+/* Window frame */
+.win {
+  max-width: 90ch;
+  margin: 0 auto;
+  background: var(--bg-win);
+  border: 1px solid var(--rule);
+  box-shadow: 0 0 0 1px #000, 0 12px 40px rgba(0,0,0,0.6),
+              inset 0 0 90px rgba(59,240,122,0.03);
+}
+
+.titlebar {
+  display: flex;
+  align-items: center;
+  gap: 0.75ch;
+  padding: 0.35rem 1ch;
+  background: var(--bg-bar);
+  border-bottom: 1px solid var(--rule);
+  color: var(--fg-mute);
+  font-size: 0.85em;
+}
+.dots { letter-spacing: 0.3ch; color: var(--amber-dim); }
+.titlebar .path { color: var(--green-dim); }
+.titlebar .dim { margin-left: auto; }
+
+.screen { padding: clamp(0.75rem, 3vw, 1.75rem) clamp(1ch, 3vw, 3ch); }
+
+/* Prompt lines */
+.prompt {
+  color: var(--fg-mute);
+  margin: 0 0 0.35rem;
+  overflow-wrap: anywhere;
+}
+.prompt .user { color: var(--green); }
+.prompt .sep  { color: var(--fg-mute); }
+.prompt .cwd  { color: var(--amber); }
+.prompt .cmd  { color: var(--fg); }
+.prompt::before { content: "$ "; color: var(--green-dim); }
+
+/* Blinking cursor */
+.cursor {
+  display: inline-block;
+  width: 1ch;
+  height: 1.1em;
+  margin-left: 0.2ch;
+  background: var(--green);
+  vertical-align: text-bottom;
+  box-shadow: var(--glow);
+  animation: blink 1.06s steps(1, end) infinite;
+}
+@keyframes blink { 0%, 50% { opacity: 1; } 50.01%, 100% { opacity: 0; } }
+
+/* Header / banner */
+.banner {
+  margin: 0;
+  color: var(--green);
+  font-size: clamp(0.72em, 2.6vw, 1em);
+  line-height: 1.15;
+  white-space: pre;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+}
+.banner::-webkit-scrollbar { display: none; }
+
+.masthead { margin: 0.6rem 0 0; }
+.masthead h1 {
+  margin: 0;
+  font-size: 1.15em;
+  font-weight: 700;
+  color: var(--amber);
+  letter-spacing: 0.05ch;
+}
+.masthead .role { color: var(--fg-mute); }
+.masthead .role b { color: var(--green); font-weight: 400; }
+
+/* Sections */
+section { margin-top: 1.6rem; }
+
+h2 {
+  display: flex;
+  align-items: center;
+  gap: 1ch;
+  margin: 0 0 0.6rem;
+  font-size: 1em;
+  font-weight: 700;
+  color: var(--green);
+  text-transform: uppercase;
+  letter-spacing: 0.12ch;
+  white-space: nowrap;
+}
+h2 .br { color: var(--rule); font-weight: 400; }
+/* Responsive dash fill: a real rule that reads as ─────── */
+h2::after {
+  content: "";
+  flex: 1 1 auto;
+  min-width: 2ch;
+  height: 0;
+  border-top: 1px dashed var(--rule);
+}
+
+/* Entries */
+.entry { margin-bottom: 1.15rem; }
+.entry:last-child { margin-bottom: 0; }
+
+.entry-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 1.5ch;
+}
+.entry-title { margin: 0; font-size: 1em; font-weight: 700; color: var(--amber); }
+.entry-title .at { color: var(--fg-mute); font-weight: 400; }
+.entry-meta { color: var(--fg-mute); font-size: 0.9em; }
+.entry-meta::before { content: "["; }
+.entry-meta::after  { content: "]"; }
+
+/* Tree-style lists */
+.tree { margin: 0.3rem 0 0; padding: 0; list-style: none; }
+.tree li {
+  position: relative;
+  padding-left: 4ch;
+  overflow-wrap: break-word;
+}
+.tree li::before {
+  content: "├──";
+  position: absolute;
+  left: 0;
+  color: var(--green-dim);
+  white-space: pre;
+}
+.tree li:last-child::before { content: "└──"; }
+
+/* Skills grid */
+.skills { margin: 0; padding: 0; list-style: none;
+  display: grid; gap: 0 2ch;
+  grid-template-columns: repeat(auto-fill, minmax(22ch, 1fr));
+}
+.skills li { color: var(--fg); overflow-wrap: anywhere; }
+.skills li::before { content: "[x] "; color: var(--green); white-space: pre; }
+
+/* Coursework / inline chips */
+.chips { margin: 0; padding: 0; list-style: none;
+  display: flex; flex-wrap: wrap; gap: 0.15rem 0; }
+.chips li { color: var(--fg); }
+.chips li:not(:last-child)::after {
+  content: " │ ";
+  color: var(--rule);
+  white-space: pre;
+}
+
+/* Contact */
+.contact { margin: 0; display: grid; gap: 0.1rem 1.5ch;
+  grid-template-columns: max-content 1fr; }
+.contact dt { color: var(--green-dim); }
+.contact dt::after { content: ":"; }
+.contact dd { margin: 0; overflow-wrap: anywhere; }
+
+a { color: var(--amber); text-decoration: none; border-bottom: 1px dotted var(--amber-dim); }
+a:hover, a:focus-visible { color: var(--bg); background: var(--amber);
+  border-bottom-color: transparent; text-shadow: none; outline: none; }
+
+.eof { margin: 1.6rem 0 0; color: var(--fg-mute); }
+.eof .dim { color: var(--rule); }
+
+/* Narrow screens: keep CLI feel, drop wide-only glyphs */
+@media (max-width: 34rem) {
+  .win { border-left: none; border-right: none; }
+  .screen { padding-left: 1.25ch; padding-right: 1.25ch; }
+  .titlebar .dim { display: none; }
+  h2 { flex-wrap: wrap; white-space: normal; }
+  .tree li { padding-left: 3ch; }
+  .tree li::before { content: "├─"; }
+  .tree li:last-child::before { content: "└─"; }
+  .contact { grid-template-columns: 1fr; gap: 0 0; }
+  .contact dd { margin-bottom: 0.35rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor { animation: none; }
+  body::before { opacity: 0.3; }
+}
+
+@media print {
+  body { background: #fff; color: #000; text-shadow: none; padding: 0; }
+  body::before, body::after { display: none; }
+  .win { border-color: #999; box-shadow: none; max-width: none; }
+  .titlebar { background: none; color: #000; }
+  h2, .entry-title, .masthead h1, .prompt .user, .prompt .cwd { color: #000; }
+  a { color: #000; }
+  .cursor { display: none; }
+  .entry, section { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="win">
+
+  <div class="titlebar">
+    <span class="dots" aria-hidden="true">● ● ●</span>
+    <span class="path">yasin@xidian:~/resume</span>
+    <span class="dim" aria-hidden="true">86x40 — bash</span>
+  </div>
+
+  <main class="screen">
+
+    <p class="prompt"><span class="cmd">cat resume.txt</span></p>
+
+    <header>
+      <pre class="banner" role="img" aria-label="ASCII art banner reading: Yasin Dovletov">
+ ╭──────────────────────────────────────────────────────╮
+ │  __   __        _         ___              _     _   │
+ │  \ \ / /_ _ ___(_)_ _    |   \ _____ __ __| |___| |_ │
+ │   \ V / _` (_-<| | ' \   | |) / _ \ V  V / / -_)  _| │
+ │    |_|\__,_/__/|_|_||_|  |___/\___/\_/\_/|_\___|\__| │
+ │                                                      │
+ ╰──────────────────────────────────────────────────────╯</pre>
+
+      <div class="masthead">
+        <h1>Yasin Dovletov</h1>
+        <p class="role">&gt; <b>Computer Science Student</b> @ Xidian University<span class="cursor" aria-hidden="true"></span></p>
+      </div>
+    </header>
+
+    <section aria-labelledby="s-about">
+      <h2 id="s-about"><span class="br" aria-hidden="true">──[</span> Profile <span class="br" aria-hidden="true">]</span></h2>
+      <p>A driven computer science student at Xidian University on a mission to turn
+      ideas into digital reality.</p>
+    </section>
+
+    <section aria-labelledby="s-exp">
+      <h2 id="s-exp"><span class="br" aria-hidden="true">──[</span> Experience <span class="br" aria-hidden="true">]</span></h2>
+
+      <article class="entry">
+        <div class="entry-head">
+          <h3 class="entry-title">Administrator <span class="at">@</span> &ldquo;Bilim G&uuml;zeri&rdquo; EC</h3>
+          <span class="entry-meta">Nov 2023 &ndash; Aug 2024</span>
+        </div>
+        <ul class="tree">
+          <li>Managed daily operations and ensured smooth functioning of the educational center.</li>
+          <li>Handled inquiries, registrations, and provided course information (student &amp; parent relations).</li>
+          <li>Organized class timetables, teacher schedules, and classroom allocations.</li>
+          <li>Maintained student databases, attendance records, and financial documentation.</li>
+          <li>Assisted teachers with materials and resolved administrative issues.</li>
+        </ul>
+      </article>
+    </section>
+
+    <section aria-labelledby="s-edu">
+      <h2 id="s-edu"><span class="br" aria-hidden="true">──[</span> Education <span class="br" aria-hidden="true">]</span></h2>
+      <article class="entry">
+        <div class="entry-head">
+          <h3 class="entry-title">Xidian University</h3>
+          <span class="entry-meta">Sep 2025 &ndash; Present</span>
+        </div>
+        <ul class="tree">
+          <li>B.Sc. Computer Science and Technology</li>
+        </ul>
+      </article>
+    </section>
+
+    <section aria-labelledby="s-course">
+      <h2 id="s-course"><span class="br" aria-hidden="true">──[</span> Coursework <span class="br" aria-hidden="true">]</span></h2>
+      <ul class="chips">
+        <li>Data Structures &amp; Algorithms</li>
+        <li>Operating Systems</li>
+        <li>Database Management Systems</li>
+        <li>Computer Networks</li>
+        <li>Software Engineering</li>
+        <li>Artificial Intelligence</li>
+        <li>Machine Learning</li>
+        <li>Cybersecurity</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="s-skills">
+      <h2 id="s-skills"><span class="br" aria-hidden="true">──[</span> Skills <span class="br" aria-hidden="true">]</span></h2>
+      <ul class="skills">
+        <li>Python</li>
+        <li>C</li>
+        <li>Lua</li>
+        <li>JavaScript</li>
+        <li>HTML / CSS</li>
+        <li>React</li>
+        <li>SQL</li>
+        <li>Pandas</li>
+        <li>NumPy</li>
+        <li>Git / GitHub</li>
+        <li>AWS</li>
+        <li>Azure</li>
+        <li>Debugging</li>
+        <li>Agile methodologies</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="s-proj">
+      <h2 id="s-proj"><span class="br" aria-hidden="true">──[</span> Projects <span class="br" aria-hidden="true">]</span></h2>
+      <article class="entry">
+        <div class="entry-head">
+          <h3 class="entry-title">Terminal Resume</h3>
+          <span class="entry-meta">2026</span>
+        </div>
+        <ul class="tree">
+          <li>Single-file CLI-styled resume in hand-written HTML and CSS, no JavaScript.</li>
+          <li>CRT scanline overlay, box-drawing layout, responsive down to 320px.</li>
+          <li><a href="https://github.com/ad3us">github.com/ad3us</a></li>
+        </ul>
+      </article>
+    </section>
+
+    <section aria-labelledby="s-contact">
+      <h2 id="s-contact"><span class="br" aria-hidden="true">──[</span> Contact <span class="br" aria-hidden="true">]</span></h2>
+      <dl class="contact">
+        <dt>email</dt>
+        <dd><a href="mailto:yasin.dovletov@zohomail.com">yasin.dovletov@zohomail.com</a></dd>
+        <dt>phone</dt>
+        <dd><a href="tel:+8615667081651">+86 156 6708 1651</a></dd>
+        <dt>github</dt>
+        <dd><a href="https://github.com/ad3us">github.com/ad3us</a></dd>
+        <dt>location</dt>
+        <dd>Xi&apos;an, China</dd>
+      </dl>
+    </section>
+
+    <p class="eof"><span class="dim">&mdash;&mdash; EOF &mdash;&mdash;</span></p>
+    <p class="prompt"><span class="cmd"></span><span class="cursor" aria-hidden="true"></span></p>
+
+  </main>
+</div>
+</body>
+</html>
